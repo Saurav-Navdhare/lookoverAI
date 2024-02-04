@@ -1,0 +1,20 @@
+org: intelhub
+service: lookover-v2
+app: lookover
+frameworkVersion: '3'
+
+provider:
+  name: aws
+  runtime: nodejs16.x
+  region: ap-south-1
+  stage: prod
+
+
+functions:
+  api:
+    handler: index.handler
+    events:  
+      - httpApi: 
+          path: /
+          method: "*"
+

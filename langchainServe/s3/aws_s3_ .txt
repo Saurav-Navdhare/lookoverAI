@@ -1,0 +1,195 @@
+create table aws_ec2_account_attributes
+(
+    _cq_source_name  text,
+    _cq_sync_time    timestamp,
+    _cq_id           uuid not null
+        unique,
+    _cq_parent_id    uuid,
+    account_id       text not null,
+    partition        text,
+    attribute_name   text not null,
+    attribute_values jsonb,
+    constraint aws_ec2_account_attributes_cqpk
+        primary key (account_id, attribute_name)
+);
+
+alter table aws_ec2_account_attributes
+    owner to postgres;
+
+create table aws_s3_access_points
+(
+    _cq_source_name   text,
+    _cq_sync_time     timestamp,
+    _cq_id            uuid not null
+        unique,
+    _cq_parent_id     uuid,
+    account_id        text,
+    region            text,
+    arn               text not null
+        constraint aws_s3_access_points_cqpk
+            primary key,
+    bucket            text,
+    name              text,
+    network_origin    text,
+    access_point_arn  text,
+    alias             text,
+    bucket_account_id text,
+    vpc_configuration jsonb
+);
+
+alter table aws_s3_access_points
+    owner to postgres;
+
+create table aws_s3_accounts
+(
+    _cq_source_name         text,
+    _cq_sync_time           timestamp,
+    _cq_id                  uuid not null
+        unique,
+    _cq_parent_id           uuid,
+    account_id              text not null
+        constraint aws_s3_accounts_cqpk
+            primary key,
+    block_public_acls       boolean,
+    block_public_policy     boolean,
+    ignore_public_acls      boolean,
+    restrict_public_buckets boolean,
+    config_exists           boolean
+);
+
+alter table aws_s3_accounts
+    owner to postgres;
+
+create table aws_s3_buckets
+(
+    _cq_source_name         text,
+    _cq_sync_time           timestamp,
+    _cq_id                  uuid not null
+        unique,
+    _cq_parent_id           uuid,
+    account_id              text,
+    arn                     text not null
+        constraint aws_s3_buckets_cqpk
+            primary key,
+    creation_date           timestamp,
+    name                    text,
+    replication_role        text,
+    replication_rules       jsonb,
+    region                  text,
+    logging_target_bucket   text,
+    logging_target_prefix   text,
+    policy                  jsonb,
+    versioning_status       text,
+    versioning_mfa_delete   text,
+    block_public_acls       boolean,
+    block_public_policy     boolean,
+    ignore_public_acls      boolean,
+    restrict_public_buckets boolean,
+    tags                    jsonb,
+    ownership_controls      text[]
+);
+
+alter table aws_s3_buckets
+    owner to postgres;
+
+create table aws_s3_bucket_encryption_rules
+(
+    _cq_source_name                         text,
+    _cq_sync_time                           timestamp,
+    _cq_id                                  uuid not null
+        constraint aws_s3_bucket_encryption_rules_cqpk
+            primary key,
+    _cq_parent_id                           uuid,
+    account_id                              text,
+    bucket_arn                              text,
+    apply_server_side_encryption_by_default jsonb,
+    bucket_key_enabled                      boolean
+);
+
+alter table aws_s3_bucket_encryption_rules
+    owner to postgres;
+
+create table aws_s3_bucket_lifecycles
+(
+    _cq_source_name                   text,
+    _cq_sync_time                     timestamp,
+    _cq_id                            uuid not null
+        constraint aws_s3_bucket_lifecycles_cqpk
+            primary key,
+    _cq_parent_id                     uuid,
+    account_id                        text,
+    bucket_arn                        text,
+    status                            text,
+    abort_incomplete_multipart_upload jsonb,
+    expiration                        jsonb,
+    id                                text,
+    noncurrent_version_expiration     jsonb,
+    noncurrent_version_transitions    jsonb,
+    prefix                            text,
+    transitions                       jsonb
+);
+
+alter table aws_s3_bucket_lifecycles
+    owner to postgres;
+
+create table aws_s3_bucket_grants
+(
+    _cq_source_name text,
+    _cq_sync_time   timestamp,
+    _cq_id          uuid not null
+        unique,
+    _cq_parent_id   uuid,
+    account_id      text,
+    bucket_arn      text not null,
+    grantee_type    text not null,
+    grantee_id      text not null,
+    permission      text not null,
+    grantee         jsonb,
+    constraint aws_s3_bucket_grants_cqpk
+        primary key (bucket_arn, grantee_type, grantee_id, permission)
+);
+
+alter table aws_s3_bucket_grants
+    owner to postgres;
+
+create table aws_s3_bucket_cors_rules
+(
+    _cq_source_name text,
+    _cq_sync_time   timestamp,
+    _cq_id          uuid not null
+        constraint aws_s3_bucket_cors_rules_cqpk
+            primary key,
+    _cq_parent_id   uuid,
+    account_id      text,
+    bucket_arn      text,
+    allowed_methods text[],
+    allowed_origins text[],
+    allowed_headers text[],
+    expose_headers  text[],
+    id              text,
+    max_age_seconds bigint
+);
+
+alter table aws_s3_bucket_cors_rules
+    owner to postgres;
+
+create table aws_s3_bucket_websites
+(
+    _cq_source_name          text,
+    _cq_sync_time            timestamp,
+    _cq_id                   uuid not null
+        constraint aws_s3_bucket_websites_cqpk
+            primary key,
+    _cq_parent_id            uuid,
+    account_id               text,
+    bucket_arn               text,
+    error_document           jsonb,
+    index_document           jsonb,
+    redirect_all_requests_to jsonb,
+    routing_rules            jsonb
+);
+
+alter table aws_s3_bucket_websites
+    owner to postgres;
+
+

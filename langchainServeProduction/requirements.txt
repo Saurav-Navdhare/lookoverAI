@@ -1,0 +1,6 @@
+llama_index
+langchain
+openai
+python-dotenv
+langchain-serve
+psycopg2-binary

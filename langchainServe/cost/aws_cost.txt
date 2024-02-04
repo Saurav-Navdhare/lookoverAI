@@ -1,0 +1,55 @@
+create table awspricing_services
+(
+    _cq_source_name  text,
+    _cq_sync_time    timestamp,
+    _cq_id           uuid      not null
+        unique,
+    _cq_parent_id    uuid,
+    format_version   text,
+    disclaimer       text,
+    offer_code       text      not null,
+    version          text      not null,
+    publication_date timestamp not null,
+    constraint awspricing_services_cqpk
+        primary key (offer_code, version, publication_date)
+);
+
+alter table awspricing_services
+    owner to postgres;
+
+create table awspricing_service_products
+(
+    _cq_source_name text,
+    _cq_sync_time   timestamp,
+    _cq_id          uuid not null
+        unique,
+    _cq_parent_id   uuid,
+    sku             text not null
+        constraint awspricing_service_products_cqpk
+            primary key,
+    product_family  text,
+    attributes      jsonb
+);
+
+alter table awspricing_service_products
+    owner to postgres;
+
+create table awspricing_service_terms
+(
+    _cq_source_name  text,
+    _cq_sync_time    timestamp,
+    _cq_id           uuid not null
+        unique,
+    _cq_parent_id    uuid,
+    type             text,
+    offer_term_code  text not null,
+    sku              text not null,
+    effective_date   timestamp,
+    price_dimensions jsonb,
+    term_attributes  jsonb,
+    constraint awspricing_service_terms_cqpk
+        primary key (offer_term_code, sku)
+);
+
+alter table awspricing_service_terms
+    owner to postgres;

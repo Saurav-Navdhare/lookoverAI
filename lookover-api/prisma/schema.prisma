@@ -1,0 +1,110 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+/// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
+model allowlist {
+  id           String   @id(map: "onboarding_company_pkey") @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  contactEmail String   @unique(map: "onboarding_company_contactEmail_key")
+  contactName  String
+  status       String
+  data         Json
+  createdAt    DateTime @default(now()) @db.Timestamptz(6)
+  updatedAt    DateTime @default(now()) @db.Timestamptz(6)
+}
+
+/// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
+model base_verification {
+  id        String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  data      Json?
+  expiresAt DateTime @db.Timestamptz(6)
+  type      String
+  createdAt DateTime @default(now()) @db.Timestamptz(6)
+  updatedAt DateTime @default(now()) @db.Timestamptz(6)
+  value     String?
+  mode      String?
+  key       String?
+
+  @@unique([key, value])
+}
+
+/// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
+model connections {
+  id           String       @id @default(dbgenerated("gen_random_uuid()"))
+  name         String
+  plugin       String
+  created_at   DateTime     @default(now()) @db.Timestamptz(6)
+  updated_at   DateTime     @default(now()) @db.Timestamptz(6)
+  org_id       String
+  data         Json?
+  organization organization @relation(fields: [org_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
+
+  @@unique([name, org_id])
+}
+
+/// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
+model organization {
+  id                 String              @id(map: "company_pkey") @default(dbgenerated("gen_random_uuid()"))
+  name               String
+  created_at         DateTime            @default(now()) @db.Timestamptz(6)
+  updated_at         DateTime            @default(now()) @db.Timestamptz(6)
+  description        String?
+  data               Json?
+  links              Json?
+  profile_type       String?
+  firebase_tenant_id String              @unique
+  connections        connections[]
+  organization_role  organization_role[]
+  user               user[]
+}
+
+/// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
+model organization_role {
+  id           String       @id(map: "orgnization_role_pkey") @default(dbgenerated("gen_random_uuid()"))
+  role         String
+  org_id       String
+  created_at   DateTime     @default(now()) @db.Timestamptz(6)
+  updated_at   DateTime     @default(now()) @db.Timestamptz(6)
+  organization organization @relation(fields: [org_id], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "orgnization_role_org_id_fkey")
+  roles        roles        @relation(fields: [role], references: [id], onDelete: Cascade, map: "orgnization_role_role_fkey")
+}
+
+/// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
+model roles {
+  id                String              @id
+  created_at        DateTime            @default(now()) @db.Timestamptz(6)
+  updated_at        DateTime            @default(now()) @db.Timestamptz(6)
+  permissions       String[]
+  organization_role organization_role[]
+  user_roles        user_roles[]
+}
+
+/// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
+model user {
+  id         String        @id
+  name       String
+  email      String
+  created_at DateTime      @default(now()) @db.Timestamptz(6)
+  updated_at DateTime      @default(now()) @db.Timestamptz(6)
+  org_id     String?
+  tenant     organization? @relation(fields: [org_id], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "user_tenant_id_fkey")
+  user_roles user_roles[]
+
+  @@unique([email, org_id])
+}
+
+/// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
+model user_roles {
+  id         String   @id @default(dbgenerated("gen_random_uuid()"))
+  user_id    String
+  role       String
+  created_at DateTime @default(now()) @db.Timestamptz(6)
+  updated_at DateTime @default(now()) @db.Timestamptz(6)
+  roles      roles    @relation(fields: [role], references: [id], onDelete: NoAction)
+  user       user     @relation(fields: [user_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
+}

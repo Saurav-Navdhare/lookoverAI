@@ -1,0 +1,16 @@
+
+    llm:
+      provider: openai
+      config:
+        model: gpt-3.5-turbo
+        temperature: 0.5
+        max_tokens: 1000
+        top_p: 1
+        stream: false
+
+    embedder:
+      provider: openai
+      config:
+        model: text-embedding-ada-002
+        deployment_name: ec_embeddings_ada_002
+    

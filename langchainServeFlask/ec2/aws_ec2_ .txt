@@ -1,0 +1,1277 @@
+create table aws_ec2_account_attributes
+(
+    _cq_source_name  text,
+    _cq_sync_time    timestamp,
+    _cq_id           uuid not null
+        unique,
+    _cq_parent_id    uuid,
+    account_id       text not null,
+    partition        text,
+    attribute_name   text not null,
+    attribute_values jsonb,
+    constraint aws_ec2_account_attributes_cqpk
+        primary key (account_id, attribute_name)
+);
+
+alter table aws_ec2_account_attributes
+    owner to postgres;
+
+create table aws_ec2_byoip_cidrs
+(
+    _cq_source_name text,
+    _cq_sync_time   timestamp,
+    _cq_id          uuid not null
+        unique,
+    _cq_parent_id   uuid,
+    account_id      text not null,
+    region          text not null,
+    cidr            text not null,
+    description     text,
+    state           text,
+    status_message  text,
+    constraint aws_ec2_byoip_cidrs_cqpk
+        primary key (account_id, region, cidr)
+);
+
+alter table aws_ec2_byoip_cidrs
+    owner to postgres;
+
+create table aws_ec2_customer_gateways
+(
+    _cq_source_name     text,
+    _cq_sync_time       timestamp,
+    _cq_id              uuid not null
+        unique,
+    _cq_parent_id       uuid,
+    account_id          text,
+    region              text,
+    arn                 text not null
+        constraint aws_ec2_customer_gateways_cqpk
+            primary key,
+    tags                jsonb,
+    bgp_asn             text,
+    certificate_arn     text,
+    customer_gateway_id text,
+    device_name         text,
+    ip_address          text,
+    state               text,
+    type                text
+);
+
+alter table aws_ec2_customer_gateways
+    owner to postgres;
+
+create table aws_ec2_dhcp_options
+(
+    _cq_source_name     text,
+    _cq_sync_time       timestamp,
+    _cq_id              uuid not null
+        unique,
+    _cq_parent_id       uuid,
+    account_id          text not null,
+    region              text not null,
+    tags                jsonb,
+    dhcp_configurations jsonb,
+    dhcp_options_id     text not null,
+    owner_id            text,
+    constraint aws_ec2_dhcp_options_cqpk
+        primary key (account_id, region, dhcp_options_id)
+);
+
+alter table aws_ec2_dhcp_options
+    owner to postgres;
+
+create table aws_ec2_ebs_snapshots
+(
+    _cq_source_name        text,
+    _cq_sync_time          timestamp,
+    _cq_id                 uuid not null
+        unique,
+    _cq_parent_id          uuid,
+    account_id             text,
+    region                 text,
+    arn                    text not null
+        constraint aws_ec2_ebs_snapshots_cqpk
+            primary key,
+    attribute              jsonb,
+    tags                   jsonb,
+    data_encryption_key_id text,
+    description            text,
+    encrypted              boolean,
+    kms_key_id             text,
+    outpost_arn            text,
+    owner_alias            text,
+    owner_id               text,
+    progress               text,
+    restore_expiry_time    timestamp,
+    snapshot_id            text,
+    start_time             timestamp,
+    state                  text,
+    state_message          text,
+    storage_tier           text,
+    volume_id              text,
+    volume_size            bigint
+);
+
+alter table aws_ec2_ebs_snapshots
+    owner to postgres;
+
+create table aws_ec2_ebs_volumes
+(
+    _cq_source_name      text,
+    _cq_sync_time        timestamp,
+    _cq_id               uuid not null
+        unique,
+    _cq_parent_id        uuid,
+    account_id           text,
+    region               text,
+    arn                  text not null
+        constraint aws_ec2_ebs_volumes_cqpk
+            primary key,
+    tags                 jsonb,
+    attachments          jsonb,
+    availability_zone    text,
+    create_time          timestamp,
+    encrypted            boolean,
+    fast_restored        boolean,
+    iops                 bigint,
+    kms_key_id           text,
+    multi_attach_enabled boolean,
+    outpost_arn          text,
+    size                 bigint,
+    snapshot_id          text,
+    state                text,
+    throughput           bigint,
+    volume_id            text,
+    volume_type          text
+);
+
+alter table aws_ec2_ebs_volumes
+    owner to postgres;
+
+create table aws_ec2_ebs_volume_statuses
+(
+    _cq_source_name     text,
+    _cq_sync_time       timestamp,
+    _cq_id              uuid not null
+        unique,
+    _cq_parent_id       uuid,
+    account_id          text,
+    region              text,
+    volume_arn          text not null
+        constraint aws_ec2_ebs_volume_statuses_cqpk
+            primary key,
+    actions             jsonb,
+    attachment_statuses jsonb,
+    availability_zone   text,
+    events              jsonb,
+    outpost_arn         text,
+    volume_id           text,
+    volume_status       jsonb
+);
+
+alter table aws_ec2_ebs_volume_statuses
+    owner to postgres;
+
+create table aws_ec2_egress_only_internet_gateways
+(
+    _cq_source_name                 text,
+    _cq_sync_time                   timestamp,
+    _cq_id                          uuid not null
+        unique,
+    _cq_parent_id                   uuid,
+    account_id                      text,
+    region                          text,
+    arn                             text not null
+        constraint aws_ec2_egress_only_internet_gateways_cqpk
+            primary key,
+    tags                            jsonb,
+    attachments                     jsonb,
+    egress_only_internet_gateway_id text
+);
+
+alter table aws_ec2_egress_only_internet_gateways
+    owner to postgres;
+
+create table aws_ec2_eips
+(
+    _cq_source_name            text,
+    _cq_sync_time              timestamp,
+    _cq_id                     uuid not null
+        constraint aws_ec2_eips_cqpk
+            primary key,
+    _cq_parent_id              uuid,
+    account_id                 text,
+    region                     text,
+    tags                       jsonb,
+    allocation_id              text,
+    association_id             text,
+    carrier_ip                 text,
+    customer_owned_ip          text,
+    customer_owned_ipv4_pool   text,
+    domain                     text,
+    instance_id                text,
+    network_border_group       text,
+    network_interface_id       text,
+    network_interface_owner_id text,
+    private_ip_address         text,
+    public_ip                  text,
+    public_ipv4_pool           text
+);
+
+alter table aws_ec2_eips
+    owner to postgres;
+
+create table aws_ec2_flow_logs
+(
+    _cq_source_name             text,
+    _cq_sync_time               timestamp,
+    _cq_id                      uuid not null
+        unique,
+    _cq_parent_id               uuid,
+    account_id                  text,
+    region                      text,
+    arn                         text not null
+        constraint aws_ec2_flow_logs_cqpk
+            primary key,
+    tags                        jsonb,
+    creation_time               timestamp,
+    deliver_cross_account_role  text,
+    deliver_logs_error_message  text,
+    deliver_logs_permission_arn text,
+    deliver_logs_status         text,
+    destination_options         jsonb,
+    flow_log_id                 text,
+    flow_log_status             text,
+    log_destination             text,
+    log_destination_type        text,
+    log_format                  text,
+    log_group_name              text,
+    max_aggregation_interval    bigint,
+    resource_id                 text,
+    traffic_type                text
+);
+
+alter table aws_ec2_flow_logs
+    owner to postgres;
+
+create table aws_ec2_hosts
+(
+    _cq_source_name                         text,
+    _cq_sync_time                           timestamp,
+    _cq_id                                  uuid not null
+        unique,
+    _cq_parent_id                           uuid,
+    account_id                              text,
+    region                                  text,
+    arn                                     text not null
+        constraint aws_ec2_hosts_cqpk
+            primary key,
+    tags                                    jsonb,
+    allocation_time                         timestamp,
+    allows_multiple_instance_types          text,
+    auto_placement                          text,
+    availability_zone                       text,
+    availability_zone_id                    text,
+    available_capacity                      jsonb,
+    client_token                            text,
+    host_id                                 text,
+    host_properties                         jsonb,
+    host_recovery                           text,
+    host_reservation_id                     text,
+    instances                               jsonb,
+    member_of_service_linked_resource_group boolean,
+    outpost_arn                             text,
+    owner_id                                text,
+    release_time                            timestamp,
+    state                                   text
+);
+
+alter table aws_ec2_hosts
+    owner to postgres;
+
+create table aws_ec2_images
+(
+    _cq_source_name       text,
+    _cq_sync_time         timestamp,
+    _cq_id                uuid not null
+        unique,
+    _cq_parent_id         uuid,
+    account_id            text not null,
+    region                text not null,
+    arn                   text not null,
+    tags                  jsonb,
+    architecture          text,
+    block_device_mappings jsonb,
+    boot_mode             text,
+    creation_date         text,
+    deprecation_time      text,
+    description           text,
+    ena_support           boolean,
+    hypervisor            text,
+    image_id              text,
+    image_location        text,
+    image_owner_alias     text,
+    image_type            text,
+    imds_support          text,
+    kernel_id             text,
+    name                  text,
+    owner_id              text,
+    platform              text,
+    platform_details      text,
+    product_codes         jsonb,
+    public                boolean,
+    ramdisk_id            text,
+    root_device_name      text,
+    root_device_type      text,
+    sriov_net_support     text,
+    state                 text,
+    state_reason          jsonb,
+    tpm_support           text,
+    usage_operation       text,
+    virtualization_type   text,
+    constraint aws_ec2_images_cqpk
+        primary key (account_id, region, arn)
+);
+
+alter table aws_ec2_images
+    owner to postgres;
+
+create table aws_ec2_image_launch_permissions
+(
+    _cq_source_name         text,
+    _cq_sync_time           timestamp,
+    _cq_id                  uuid not null
+        constraint aws_ec2_image_launch_permissions_cqpk
+            primary key,
+    _cq_parent_id           uuid,
+    image_arn               text,
+    "group"                 text,
+    organization_arn        text,
+    organizational_unit_arn text,
+    user_id                 text
+);
+
+alter table aws_ec2_image_launch_permissions
+    owner to postgres;
+
+create table aws_ec2_instances
+(
+    _cq_source_name                            text,
+    _cq_sync_time                              timestamp,
+    _cq_id                                     uuid not null
+        unique,
+    _cq_parent_id                              uuid,
+    account_id                                 text,
+    region                                     text,
+    arn                                        text not null
+        constraint aws_ec2_instances_cqpk
+            primary key,
+    state_transition_reason_time               timestamp,
+    tags                                       jsonb,
+    ami_launch_index                           bigint,
+    architecture                               text,
+    block_device_mappings                      jsonb,
+    boot_mode                                  text,
+    capacity_reservation_id                    text,
+    capacity_reservation_specification         jsonb,
+    client_token                               text,
+    cpu_options                                jsonb,
+    ebs_optimized                              boolean,
+    elastic_gpu_associations                   jsonb,
+    elastic_inference_accelerator_associations jsonb,
+    ena_support                                boolean,
+    enclave_options                            jsonb,
+    hibernation_options                        jsonb,
+    hypervisor                                 text,
+    iam_instance_profile                       jsonb,
+    image_id                                   text,
+    instance_id                                text,
+    instance_lifecycle                         text,
+    instance_type                              text,
+    ipv6_address                               text,
+    kernel_id                                  text,
+    key_name                                   text,
+    launch_time                                timestamp,
+    licenses                                   jsonb,
+    maintenance_options                        jsonb,
+    metadata_options                           jsonb,
+    monitoring                                 jsonb,
+    network_interfaces                         jsonb,
+    outpost_arn                                text,
+    placement                                  jsonb,
+    platform                                   text,
+    platform_details                           text,
+    private_dns_name                           text,
+    private_dns_name_options                   jsonb,
+    private_ip_address                         text,
+    product_codes                              jsonb,
+    public_dns_name                            text,
+    public_ip_address                          text,
+    ramdisk_id                                 text,
+    root_device_name                           text,
+    root_device_type                           text,
+    security_groups                            jsonb,
+    source_dest_check                          boolean,
+    spot_instance_request_id                   text,
+    sriov_net_support                          text,
+    state                                      jsonb,
+    state_reason                               jsonb,
+    state_transition_reason                    text,
+    subnet_id                                  text,
+    tpm_support                                text,
+    usage_operation                            text,
+    usage_operation_update_time                timestamp,
+    virtualization_type                        text,
+    vpc_id                                     text
+);
+
+alter table aws_ec2_instances
+    owner to postgres;
+
+create table aws_ec2_instance_statuses
+(
+    _cq_source_name   text,
+    _cq_sync_time     timestamp,
+    _cq_id            uuid not null
+        unique,
+    _cq_parent_id     uuid,
+    account_id        text,
+    region            text,
+    arn               text not null
+        constraint aws_ec2_instance_statuses_cqpk
+            primary key,
+    availability_zone text,
+    events            jsonb,
+    instance_id       text,
+    instance_state    jsonb,
+    instance_status   jsonb,
+    outpost_arn       text,
+    system_status     jsonb
+);
+
+alter table aws_ec2_instance_statuses
+    owner to postgres;
+
+create table aws_ec2_instance_types
+(
+    _cq_source_name                 text,
+    _cq_sync_time                   timestamp,
+    _cq_id                          uuid not null
+        unique,
+    _cq_parent_id                   uuid,
+    account_id                      text,
+    region                          text,
+    arn                             text not null
+        constraint aws_ec2_instance_types_cqpk
+            primary key,
+    auto_recovery_supported         boolean,
+    bare_metal                      boolean,
+    burstable_performance_supported boolean,
+    current_generation              boolean,
+    dedicated_hosts_supported       boolean,
+    ebs_info                        jsonb,
+    fpga_info                       jsonb,
+    free_tier_eligible              boolean,
+    gpu_info                        jsonb,
+    hibernation_supported           boolean,
+    hypervisor                      text,
+    inference_accelerator_info      jsonb,
+    instance_storage_info           jsonb,
+    instance_storage_supported      boolean,
+    instance_type                   text,
+    memory_info                     jsonb,
+    network_info                    jsonb,
+    placement_group_info            jsonb,
+    processor_info                  jsonb,
+    supported_boot_modes            text[],
+    supported_root_device_types     text[],
+    supported_usage_classes         text[],
+    supported_virtualization_types  text[],
+    v_cpu_info                      jsonb
+);
+
+alter table aws_ec2_instance_types
+    owner to postgres;
+
+create table aws_ec2_internet_gateways
+(
+    _cq_source_name     text,
+    _cq_sync_time       timestamp,
+    _cq_id              uuid not null
+        unique,
+    _cq_parent_id       uuid,
+    account_id          text,
+    region              text,
+    arn                 text not null
+        constraint aws_ec2_internet_gateways_cqpk
+            primary key,
+    tags                jsonb,
+    attachments         jsonb,
+    internet_gateway_id text,
+    owner_id            text
+);
+
+alter table aws_ec2_internet_gateways
+    owner to postgres;
+
+create table aws_ec2_key_pairs
+(
+    _cq_source_name text,
+    _cq_sync_time   timestamp,
+    _cq_id          uuid not null
+        unique,
+    _cq_parent_id   uuid,
+    account_id      text,
+    region          text,
+    arn             text not null
+        constraint aws_ec2_key_pairs_cqpk
+            primary key,
+    tags            jsonb,
+    create_time     timestamp,
+    key_fingerprint text,
+    key_name        text,
+    key_pair_id     text,
+    key_type        text,
+    public_key      text
+);
+
+alter table aws_ec2_key_pairs
+    owner to postgres;
+
+create table aws_ec2_launch_templates
+(
+    _cq_source_name        text,
+    _cq_sync_time          timestamp,
+    _cq_id                 uuid not null
+        unique,
+    _cq_parent_id          uuid,
+    account_id             text,
+    region                 text,
+    arn                    text not null
+        constraint aws_ec2_launch_templates_cqpk
+            primary key,
+    tags                   jsonb,
+    create_time            timestamp,
+    created_by             text,
+    default_version_number bigint,
+    latest_version_number  bigint,
+    launch_template_id     text,
+    launch_template_name   text
+);
+
+alter table aws_ec2_launch_templates
+    owner to postgres;
+
+create table aws_ec2_launch_template_versions
+(
+    _cq_source_name      text,
+    _cq_sync_time        timestamp,
+    _cq_id               uuid   not null
+        unique,
+    _cq_parent_id        uuid,
+    account_id           text,
+    region               text,
+    arn                  text   not null,
+    version_number       bigint not null,
+    create_time          timestamp,
+    created_by           text,
+    default_version      boolean,
+    launch_template_data jsonb,
+    launch_template_id   text,
+    launch_template_name text,
+    version_description  text,
+    constraint aws_ec2_launch_template_versions_cqpk
+        primary key (arn, version_number)
+);
+
+alter table aws_ec2_launch_template_versions
+    owner to postgres;
+
+create table aws_ec2_managed_prefix_lists
+(
+    _cq_source_name    text,
+    _cq_sync_time      timestamp,
+    _cq_id             uuid not null
+        unique,
+    _cq_parent_id      uuid,
+    request_account_id text not null,
+    request_region     text not null,
+    arn                text not null,
+    tags               jsonb,
+    address_family     text,
+    max_entries        bigint,
+    owner_id           text,
+    prefix_list_arn    text,
+    prefix_list_id     text,
+    prefix_list_name   text,
+    state              text,
+    state_message      text,
+    version            bigint,
+    constraint aws_ec2_managed_prefix_lists_cqpk
+        primary key (request_account_id, request_region, arn)
+);
+
+alter table aws_ec2_managed_prefix_lists
+    owner to postgres;
+
+create table aws_ec2_nat_gateways
+(
+    _cq_source_name       text,
+    _cq_sync_time         timestamp,
+    _cq_id                uuid not null
+        unique,
+    _cq_parent_id         uuid,
+    account_id            text,
+    region                text,
+    arn                   text not null
+        constraint aws_ec2_nat_gateways_cqpk
+            primary key,
+    tags                  jsonb,
+    connectivity_type     text,
+    create_time           timestamp,
+    delete_time           timestamp,
+    failure_code          text,
+    failure_message       text,
+    nat_gateway_addresses jsonb,
+    nat_gateway_id        text,
+    provisioned_bandwidth jsonb,
+    state                 text,
+    subnet_id             text,
+    vpc_id                text
+);
+
+alter table aws_ec2_nat_gateways
+    owner to postgres;
+
+create table aws_ec2_network_acls
+(
+    _cq_source_name text,
+    _cq_sync_time   timestamp,
+    _cq_id          uuid not null
+        unique,
+    _cq_parent_id   uuid,
+    account_id      text,
+    region          text,
+    arn             text not null
+        constraint aws_ec2_network_acls_cqpk
+            primary key,
+    tags            jsonb,
+    associations    jsonb,
+    entries         jsonb,
+    is_default      boolean,
+    network_acl_id  text,
+    owner_id        text,
+    vpc_id          text
+);
+
+alter table aws_ec2_network_acls
+    owner to postgres;
+
+create table aws_ec2_network_interfaces
+(
+    _cq_source_name      text,
+    _cq_sync_time        timestamp,
+    _cq_id               uuid not null
+        unique,
+    _cq_parent_id        uuid,
+    account_id           text,
+    region               text,
+    arn                  text not null
+        constraint aws_ec2_network_interfaces_cqpk
+            primary key,
+    tags                 jsonb,
+    association          jsonb,
+    attachment           jsonb,
+    availability_zone    text,
+    deny_all_igw_traffic boolean,
+    description          text,
+    groups               jsonb,
+    interface_type       text,
+    ipv4_prefixes        jsonb,
+    ipv6_address         text,
+    ipv6_addresses       jsonb,
+    ipv6_native          boolean,
+    ipv6_prefixes        jsonb,
+    mac_address          text,
+    network_interface_id text,
+    outpost_arn          text,
+    owner_id             text,
+    private_dns_name     text,
+    private_ip_address   text,
+    private_ip_addresses jsonb,
+    requester_id         text,
+    requester_managed    boolean,
+    source_dest_check    boolean,
+    status               text,
+    subnet_id            text,
+    vpc_id               text
+);
+
+alter table aws_ec2_network_interfaces
+    owner to postgres;
+
+create table aws_ec2_regional_configs
+(
+    _cq_source_name                   text,
+    _cq_sync_time                     timestamp,
+    _cq_id                            uuid not null
+        unique,
+    _cq_parent_id                     uuid,
+    account_id                        text not null,
+    region                            text not null,
+    ebs_encryption_enabled_by_default boolean,
+    ebs_default_kms_key_id            text,
+    constraint aws_ec2_regional_configs_cqpk
+        primary key (account_id, region)
+);
+
+alter table aws_ec2_regional_configs
+    owner to postgres;
+
+create table aws_ec2_reserved_instances
+(
+    _cq_source_name       text,
+    _cq_sync_time         timestamp,
+    _cq_id                uuid not null
+        unique,
+    _cq_parent_id         uuid,
+    account_id            text,
+    region                text,
+    arn                   text not null
+        constraint aws_ec2_reserved_instances_cqpk
+            primary key,
+    tags                  jsonb,
+    availability_zone     text,
+    currency_code         text,
+    duration              bigint,
+    "end"                 timestamp,
+    fixed_price           double precision,
+    instance_count        bigint,
+    instance_tenancy      text,
+    instance_type         text,
+    offering_class        text,
+    offering_type         text,
+    product_description   text,
+    recurring_charges     jsonb,
+    reserved_instances_id text,
+    scope                 text,
+    start                 timestamp,
+    state                 text,
+    usage_price           double precision
+);
+
+alter table aws_ec2_reserved_instances
+    owner to postgres;
+
+create table aws_ec2_route_tables
+(
+    _cq_source_name  text,
+    _cq_sync_time    timestamp,
+    _cq_id           uuid not null
+        unique,
+    _cq_parent_id    uuid,
+    account_id       text,
+    region           text,
+    arn              text not null
+        constraint aws_ec2_route_tables_cqpk
+            primary key,
+    tags             jsonb,
+    associations     jsonb,
+    owner_id         text,
+    propagating_vgws jsonb,
+    route_table_id   text,
+    routes           jsonb,
+    vpc_id           text
+);
+
+alter table aws_ec2_route_tables
+    owner to postgres;
+
+create table aws_ec2_security_groups
+(
+    _cq_source_name       text,
+    _cq_sync_time         timestamp,
+    _cq_id                uuid not null
+        unique,
+    _cq_parent_id         uuid,
+    account_id            text,
+    region                text,
+    arn                   text not null
+        constraint aws_ec2_security_groups_cqpk
+            primary key,
+    tags                  jsonb,
+    description           text,
+    group_id              text,
+    group_name            text,
+    ip_permissions        jsonb,
+    ip_permissions_egress jsonb,
+    owner_id              text,
+    vpc_id                text
+);
+
+alter table aws_ec2_security_groups
+    owner to postgres;
+
+create table aws_ec2_spot_fleet_requests
+(
+    _cq_source_name           text,
+    _cq_sync_time             timestamp,
+    _cq_id                    uuid not null
+        unique,
+    _cq_parent_id             uuid,
+    account_id                text not null,
+    region                    text not null,
+    tags                      jsonb,
+    activity_status           text,
+    create_time               timestamp,
+    spot_fleet_request_config jsonb,
+    spot_fleet_request_id     text not null,
+    spot_fleet_request_state  text,
+    constraint aws_ec2_spot_fleet_requests_cqpk
+        primary key (account_id, region, spot_fleet_request_id)
+);
+
+alter table aws_ec2_spot_fleet_requests
+    owner to postgres;
+
+create table aws_ec2_spot_fleet_instances
+(
+    _cq_source_name          text,
+    _cq_sync_time            timestamp,
+    _cq_id                   uuid not null
+        unique,
+    _cq_parent_id            uuid,
+    account_id               text,
+    region                   text,
+    arn                      text not null
+        constraint aws_ec2_spot_fleet_instances_cqpk
+            primary key,
+    spot_fleet_request_id    text,
+    instance_health          text,
+    instance_id              text,
+    instance_type            text,
+    spot_instance_request_id text
+);
+
+alter table aws_ec2_spot_fleet_instances
+    owner to postgres;
+
+create table aws_ec2_spot_instance_requests
+(
+    _cq_source_name                text,
+    _cq_sync_time                  timestamp,
+    _cq_id                         uuid not null
+        unique,
+    _cq_parent_id                  uuid,
+    account_id                     text not null,
+    region                         text not null,
+    tags                           jsonb,
+    actual_block_hourly_price      text,
+    availability_zone_group        text,
+    block_duration_minutes         bigint,
+    create_time                    timestamp,
+    fault                          jsonb,
+    instance_id                    text,
+    instance_interruption_behavior text,
+    launch_group                   text,
+    launch_specification           jsonb,
+    launched_availability_zone     text,
+    product_description            text,
+    spot_instance_request_id       text not null,
+    spot_price                     text,
+    state                          text,
+    status                         jsonb,
+    type                           text,
+    valid_from                     timestamp,
+    valid_until                    timestamp,
+    constraint aws_ec2_spot_instance_requests_cqpk
+        primary key (account_id, region, spot_instance_request_id)
+);
+
+alter table aws_ec2_spot_instance_requests
+    owner to postgres;
+
+create table aws_ec2_subnets
+(
+    _cq_source_name                    text,
+    _cq_sync_time                      timestamp,
+    _cq_id                             uuid not null
+        unique,
+    _cq_parent_id                      uuid,
+    account_id                         text,
+    region                             text,
+    arn                                text not null
+        constraint aws_ec2_subnets_cqpk
+            primary key,
+    tags                               jsonb,
+    assign_ipv6_address_on_creation    boolean,
+    availability_zone                  text,
+    availability_zone_id               text,
+    available_ip_address_count         bigint,
+    cidr_block                         text,
+    customer_owned_ipv4_pool           text,
+    default_for_az                     boolean,
+    enable_dns64                       boolean,
+    enable_lni_at_device_index         bigint,
+    ipv6_cidr_block_association_set    jsonb,
+    ipv6_native                        boolean,
+    map_customer_owned_ip_on_launch    boolean,
+    map_public_ip_on_launch            boolean,
+    outpost_arn                        text,
+    owner_id                           text,
+    private_dns_name_options_on_launch jsonb,
+    state                              text,
+    subnet_arn                         text,
+    subnet_id                          text,
+    vpc_id                             text
+);
+
+alter table aws_ec2_subnets
+    owner to postgres;
+
+create table aws_ec2_transit_gateways
+(
+    _cq_source_name     text,
+    _cq_sync_time       timestamp,
+    _cq_id              uuid not null
+        unique,
+    _cq_parent_id       uuid,
+    account_id          text not null,
+    region              text not null,
+    id                  text,
+    arn                 text not null,
+    tags                jsonb,
+    creation_time       timestamp,
+    description         text,
+    options             jsonb,
+    owner_id            text,
+    state               text,
+    transit_gateway_arn text,
+    transit_gateway_id  text,
+    constraint aws_ec2_transit_gateways_cqpk
+        primary key (account_id, region, arn)
+);
+
+alter table aws_ec2_transit_gateways
+    owner to postgres;
+
+create table aws_ec2_transit_gateway_attachments
+(
+    _cq_source_name               text,
+    _cq_sync_time                 timestamp,
+    _cq_id                        uuid not null
+        constraint aws_ec2_transit_gateway_attachments_cqpk
+            primary key,
+    _cq_parent_id                 uuid,
+    account_id                    text,
+    region                        text,
+    transit_gateway_arn           text,
+    tags                          jsonb,
+    association                   jsonb,
+    creation_time                 timestamp,
+    resource_id                   text,
+    resource_owner_id             text,
+    resource_type                 text,
+    state                         text,
+    transit_gateway_attachment_id text,
+    transit_gateway_id            text,
+    transit_gateway_owner_id      text
+);
+
+alter table aws_ec2_transit_gateway_attachments
+    owner to postgres;
+
+create table aws_ec2_transit_gateway_route_tables
+(
+    _cq_source_name                 text,
+    _cq_sync_time                   timestamp,
+    _cq_id                          uuid not null
+        constraint aws_ec2_transit_gateway_route_tables_cqpk
+            primary key,
+    _cq_parent_id                   uuid,
+    account_id                      text,
+    region                          text,
+    transit_gateway_arn             text,
+    tags                            jsonb,
+    creation_time                   timestamp,
+    default_association_route_table boolean,
+    default_propagation_route_table boolean,
+    state                           text,
+    transit_gateway_id              text,
+    transit_gateway_route_table_id  text
+);
+
+alter table aws_ec2_transit_gateway_route_tables
+    owner to postgres;
+
+create table aws_ec2_transit_gateway_vpc_attachments
+(
+    _cq_source_name               text,
+    _cq_sync_time                 timestamp,
+    _cq_id                        uuid not null
+        constraint aws_ec2_transit_gateway_vpc_attachments_cqpk
+            primary key,
+    _cq_parent_id                 uuid,
+    account_id                    text,
+    region                        text,
+    transit_gateway_arn           text,
+    tags                          jsonb,
+    creation_time                 timestamp,
+    options                       jsonb,
+    state                         text,
+    subnet_ids                    text[],
+    transit_gateway_attachment_id text,
+    transit_gateway_id            text,
+    vpc_id                        text,
+    vpc_owner_id                  text
+);
+
+alter table aws_ec2_transit_gateway_vpc_attachments
+    owner to postgres;
+
+create table aws_ec2_transit_gateway_peering_attachments
+(
+    _cq_source_name                        text,
+    _cq_sync_time                          timestamp,
+    _cq_id                                 uuid not null
+        constraint aws_ec2_transit_gateway_peering_attachments_cqpk
+            primary key,
+    _cq_parent_id                          uuid,
+    account_id                             text,
+    region                                 text,
+    transit_gateway_arn                    text,
+    tags                                   jsonb,
+    accepter_tgw_info                      jsonb,
+    accepter_transit_gateway_attachment_id text,
+    creation_time                          timestamp,
+    options                                jsonb,
+    requester_tgw_info                     jsonb,
+    state                                  text,
+    status                                 jsonb,
+    transit_gateway_attachment_id          text
+);
+
+alter table aws_ec2_transit_gateway_peering_attachments
+    owner to postgres;
+
+create table aws_ec2_transit_gateway_multicast_domains
+(
+    _cq_source_name                      text,
+    _cq_sync_time                        timestamp,
+    _cq_id                               uuid not null
+        constraint aws_ec2_transit_gateway_multicast_domains_cqpk
+            primary key,
+    _cq_parent_id                        uuid,
+    account_id                           text,
+    region                               text,
+    transit_gateway_arn                  text,
+    tags                                 jsonb,
+    creation_time                        timestamp,
+    options                              jsonb,
+    owner_id                             text,
+    state                                text,
+    transit_gateway_id                   text,
+    transit_gateway_multicast_domain_arn text,
+    transit_gateway_multicast_domain_id  text
+);
+
+alter table aws_ec2_transit_gateway_multicast_domains
+    owner to postgres;
+
+create table aws_ec2_vpc_endpoints
+(
+    _cq_source_name       text,
+    _cq_sync_time         timestamp,
+    _cq_id                uuid not null
+        unique,
+    _cq_parent_id         uuid,
+    account_id            text,
+    region                text,
+    arn                   text not null
+        constraint aws_ec2_vpc_endpoints_cqpk
+            primary key,
+    tags                  jsonb,
+    creation_timestamp    timestamp,
+    dns_entries           jsonb,
+    dns_options           jsonb,
+    groups                jsonb,
+    ip_address_type       text,
+    last_error            jsonb,
+    network_interface_ids text[],
+    owner_id              text,
+    policy_document       text,
+    private_dns_enabled   boolean,
+    requester_managed     boolean,
+    route_table_ids       text[],
+    service_name          text,
+    state                 text,
+    subnet_ids            text[],
+    vpc_endpoint_id       text,
+    vpc_endpoint_type     text,
+    vpc_id                text
+);
+
+alter table aws_ec2_vpc_endpoints
+    owner to postgres;
+
+create table aws_ec2_vpc_endpoint_service_configurations
+(
+    _cq_source_name                text,
+    _cq_sync_time                  timestamp,
+    _cq_id                         uuid not null
+        unique,
+    _cq_parent_id                  uuid,
+    account_id                     text,
+    region                         text,
+    arn                            text not null
+        constraint aws_ec2_vpc_endpoint_service_configurations_cqpk
+            primary key,
+    tags                           jsonb,
+    acceptance_required            boolean,
+    availability_zones             text[],
+    base_endpoint_dns_names        text[],
+    gateway_load_balancer_arns     text[],
+    manages_vpc_endpoints          boolean,
+    network_load_balancer_arns     text[],
+    payer_responsibility           text,
+    private_dns_name               text,
+    private_dns_name_configuration jsonb,
+    service_id                     text,
+    service_name                   text,
+    service_state                  text,
+    service_type                   jsonb,
+    supported_ip_address_types     text[]
+);
+
+alter table aws_ec2_vpc_endpoint_service_configurations
+    owner to postgres;
+
+create table aws_ec2_vpc_endpoint_services
+(
+    _cq_source_name                     text,
+    _cq_sync_time                       timestamp,
+    _cq_id                              uuid not null
+        unique,
+    _cq_parent_id                       uuid,
+    account_id                          text,
+    region                              text,
+    arn                                 text not null
+        constraint aws_ec2_vpc_endpoint_services_cqpk
+            primary key,
+    tags                                jsonb,
+    acceptance_required                 boolean,
+    availability_zones                  text[],
+    base_endpoint_dns_names             text[],
+    manages_vpc_endpoints               boolean,
+    owner                               text,
+    payer_responsibility                text,
+    private_dns_name                    text,
+    private_dns_name_verification_state text,
+    private_dns_names                   jsonb,
+    service_id                          text,
+    service_name                        text,
+    service_type                        jsonb,
+    supported_ip_address_types          text[],
+    vpc_endpoint_policy_supported       boolean
+);
+
+alter table aws_ec2_vpc_endpoint_services
+    owner to postgres;
+
+create table aws_ec2_vpc_endpoint_service_permissions
+(
+    _cq_source_name       text,
+    _cq_sync_time         timestamp,
+    _cq_id                uuid not null
+        unique,
+    _cq_parent_id         uuid,
+    account_id            text not null,
+    region                text,
+    tags                  jsonb,
+    principal             text,
+    principal_type        text,
+    service_id            text not null,
+    service_permission_id text not null,
+    constraint aws_ec2_vpc_endpoint_service_permissions_cqpk
+        primary key (account_id, service_id, service_permission_id)
+);
+
+alter table aws_ec2_vpc_endpoint_service_permissions
+    owner to postgres;
+
+create table aws_ec2_vpc_peering_connections
+(
+    _cq_source_name           text,
+    _cq_sync_time             timestamp,
+    _cq_id                    uuid not null
+        unique,
+    _cq_parent_id             uuid,
+    account_id                text,
+    region                    text,
+    arn                       text not null
+        constraint aws_ec2_vpc_peering_connections_cqpk
+            primary key,
+    tags                      jsonb,
+    accepter_vpc_info         jsonb,
+    expiration_time           timestamp,
+    requester_vpc_info        jsonb,
+    status                    jsonb,
+    vpc_peering_connection_id text
+);
+
+alter table aws_ec2_vpc_peering_connections
+    owner to postgres;
+
+create table aws_ec2_vpcs
+(
+    _cq_source_name                 text,
+    _cq_sync_time                   timestamp,
+    _cq_id                          uuid not null
+        unique,
+    _cq_parent_id                   uuid,
+    account_id                      text,
+    region                          text,
+    arn                             text not null
+        constraint aws_ec2_vpcs_cqpk
+            primary key,
+    tags                            jsonb,
+    cidr_block                      text,
+    cidr_block_association_set      jsonb,
+    dhcp_options_id                 text,
+    instance_tenancy                text,
+    ipv6_cidr_block_association_set jsonb,
+    is_default                      boolean,
+    owner_id                        text,
+    state                           text,
+    vpc_id                          text
+);
+
+alter table aws_ec2_vpcs
+    owner to postgres;
+
+create table aws_ec2_vpn_gateways
+(
+    _cq_source_name   text,
+    _cq_sync_time     timestamp,
+    _cq_id            uuid not null
+        unique,
+    _cq_parent_id     uuid,
+    account_id        text,
+    region            text,
+    arn               text not null
+        constraint aws_ec2_vpn_gateways_cqpk
+            primary key,
+    tags              jsonb,
+    amazon_side_asn   bigint,
+    availability_zone text,
+    state             text,
+    type              text,
+    vpc_attachments   jsonb,
+    vpn_gateway_id    text
+);
+
+alter table aws_ec2_vpn_gateways
+    owner to postgres;
+
+
